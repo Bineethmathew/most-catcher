@@ -67,4 +67,56 @@ public class LoginsController extends DatabaseHandler {
 
         return recordsList;
     }
+
+    public Login readSingleRecord(int loginId) {
+
+        Login login = null;
+
+        String sql = "SELECT * FROM logins WHERE id = " + loginId;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if (cursor.moveToFirst()) {
+
+            int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex("id")));
+            String login1 = cursor.getString(cursor.getColumnIndex("login"));
+            String password = cursor.getString(cursor.getColumnIndex("password"));
+            String phone = cursor.getString(cursor.getColumnIndex("phone"));
+
+            login = new Login();
+            login.setId(id);
+            login.setLogin(login1);
+            login.setPassword(password);
+            login.setPhone(phone);
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return login;
+
+    }
+
+    public boolean update(Login login) {
+
+        ContentValues values = new ContentValues();
+
+        values.put("login", login.getLogin());
+        values.put("password", login.getPassword());
+        values.put("phone", login.getPhone());
+
+        String where = "id = ?";
+
+        String[] whereArgs = { Integer.toString(login.getId()) };
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        boolean updateSuccessful = db.update("logins", values, where, whereArgs) > 0;
+        db.close();
+
+        return updateSuccessful;
+    }
 }

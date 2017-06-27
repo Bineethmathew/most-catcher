@@ -42,6 +42,7 @@ public class LoginsActivity extends AppCompatActivity {
                 textViewStudentItem.setPadding(0, 10, 0, 10);
                 textViewStudentItem.setText(textViewContents);
                 textViewStudentItem.setTag(Integer.toString(login.getId()));
+                textViewStudentItem.setOnLongClickListener(new OnLongClickListenerLogin());
 
                 linearLayoutRecords.addView(textViewStudentItem);
             }
