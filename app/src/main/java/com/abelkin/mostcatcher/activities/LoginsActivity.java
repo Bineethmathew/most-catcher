@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import com.abelkin.mostcatcher.R;
+import com.abelkin.mostcatcher.activities.views.OnClickListenerCreateLogin;
 
 public class LoginsActivity extends AppCompatActivity {
 
