@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.abelkin.mostcatcher.R;
+import com.abelkin.mostcatcher.activities.LoginsActivity;
 import com.abelkin.mostcatcher.data.LoginsController;
 import com.abelkin.mostcatcher.models.Login;
 
@@ -49,6 +50,8 @@ public class OnClickListenerCreateLogin implements View.OnClickListener {
                                 }else{
                                     Toast.makeText(context, "Информация о логине не добавлена.", Toast.LENGTH_SHORT).show();
                                 }
+
+                                ((LoginsActivity) context).readRecords();
 
                                 dialog.cancel();
                             }
