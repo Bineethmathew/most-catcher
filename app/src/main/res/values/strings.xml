@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">МОСТ Ловец</string>
+    <string name="logins">Логины</string>
+    <string name="cities">Города</string>
+    <string name="time">Время</string>
+
+</resources>
