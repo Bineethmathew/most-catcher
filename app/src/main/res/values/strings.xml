@@ -3,5 +3,9 @@
     <string name="logins">Логины</string>
     <string name="cities">Города</string>
     <string name="time">Время</string>
+    <string name="create_login">Добавить логин</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="phone">Телефон</string>
 
 </resources>
