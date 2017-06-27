@@ -119,4 +119,15 @@ public class LoginsController extends DatabaseHandler {
 
         return updateSuccessful;
     }
+
+    public boolean delete(int id) {
+        boolean deleteSuccessful = false;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        deleteSuccessful = db.delete("logins", "id ='" + id + "'", null) > 0;
+        db.close();
+
+        return deleteSuccessful;
+
+    }
 }

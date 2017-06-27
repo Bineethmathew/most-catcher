@@ -33,7 +33,20 @@ public class OnLongClickListenerLogin implements View.OnLongClickListener {
 
                         if (item == 0) {
                             editRecord(Integer.parseInt(id));
+                        } else if (item == 1) {
+
+                            boolean deleteSuccessful = new LoginsController(context).delete(Integer.parseInt(id));
+
+                            if (deleteSuccessful){
+                                Toast.makeText(context, "Запись была удалена.", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(context, "Запись не удалось удалить.", Toast.LENGTH_SHORT).show();
+                            }
+
+                            ((LoginsActivity) context).readRecords();
+
                         }
+
                         dialog.dismiss();
 
                     }
