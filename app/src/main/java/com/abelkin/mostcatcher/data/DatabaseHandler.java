@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "MostCatcherDatabase";
 
     public DatabaseHandler(Context context) {
@@ -23,7 +23,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "( id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "login TEXT, " +
                 "password TEXT, " +
-                "phone TEXT ) ";
+                "phone TEXT," +
+                "bad_tries INT ) ";
 
         db.execSQL(sql);
 

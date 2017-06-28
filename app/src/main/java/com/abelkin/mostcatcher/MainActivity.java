@@ -5,13 +5,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import com.abelkin.mostcatcher.activities.*;
+import com.abelkin.mostcatcher.tasks.MainTask;
 
 public class MainActivity extends AppCompatActivity {
+
+    MainTask mainTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainTask = new MainTask(getApplicationContext());
+        mainTask.execute(5);
     }
 
     public void openLogins(View view) {

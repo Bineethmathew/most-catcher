@@ -9,6 +9,7 @@ import com.abelkin.mostcatcher.R;
 import com.abelkin.mostcatcher.activities.views.OnClickListenerCreateLogin;
 import com.abelkin.mostcatcher.data.LoginsController;
 import com.abelkin.mostcatcher.models.Login;
+import com.abelkin.mostcatcher.tasks.MainTask;
 
 import java.util.List;
 
@@ -36,11 +37,9 @@ public class LoginsActivity extends AppCompatActivity {
 
             for (Login login : logins) {
 
-                String textViewContents = login.getLogin() + " - " + login.getPhone();
-
                 TextView textViewStudentItem= new TextView(this);
                 textViewStudentItem.setPadding(0, 10, 0, 10);
-                textViewStudentItem.setText(textViewContents);
+                textViewStudentItem.setText(login.toString());
                 textViewStudentItem.setTag(Integer.toString(login.getId()));
                 textViewStudentItem.setOnLongClickListener(new OnLongClickListenerLogin());
 

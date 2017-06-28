@@ -9,6 +9,7 @@ public class Login {
     String login;
     String password;
     String phone;
+    int badTries;
 
     public Login() {
     }
@@ -43,5 +44,17 @@ public class Login {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public int getBadTries() {
+        return badTries;
+    }
+
+    public void setBadTries(int badTries) {
+        this.badTries = badTries;
+    }
+
+    public String toString() {
+        return login + " неудачных попыток: " + badTries;
     }
 }

@@ -8,11 +8,14 @@ import com.abelkin.mostcatcher.models.Login;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by abelkin on 27.06.2017.
  */
 public class LoginsController extends DatabaseHandler {
+
+    private static Random random = new Random();
 
     public LoginsController(Context context) {
         super(context);
@@ -25,6 +28,7 @@ public class LoginsController extends DatabaseHandler {
         values.put("login", login.getLogin());
         values.put("password", login.getPassword());
         values.put("phone", login.getPhone());
+        values.put("bad_tries", 0);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -45,20 +49,8 @@ public class LoginsController extends DatabaseHandler {
 
         if (cursor.moveToFirst()) {
             do {
-
-                int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex("id")));
-                String login = cursor.getString(cursor.getColumnIndex("login"));
-                String password = cursor.getString(cursor.getColumnIndex("password"));
-                String phone = cursor.getString(cursor.getColumnIndex("phone"));
-
-                Login login1 = new Login();
-                login1.setId(id);
-                login1.setLogin(login);
-                login1.setPassword(password);
-                login1.setPhone(phone);
-
-                recordsList.add(login1);
-
+                Login login = readRecord(cursor);
+                recordsList.add(login);
             } while (cursor.moveToNext());
         }
 
@@ -80,16 +72,7 @@ public class LoginsController extends DatabaseHandler {
 
         if (cursor.moveToFirst()) {
 
-            int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex("id")));
-            String login1 = cursor.getString(cursor.getColumnIndex("login"));
-            String password = cursor.getString(cursor.getColumnIndex("password"));
-            String phone = cursor.getString(cursor.getColumnIndex("phone"));
-
-            login = new Login();
-            login.setId(id);
-            login.setLogin(login1);
-            login.setPassword(password);
-            login.setPhone(phone);
+            login = readRecord(cursor);
 
         }
 
@@ -107,6 +90,7 @@ public class LoginsController extends DatabaseHandler {
         values.put("login", login.getLogin());
         values.put("password", login.getPassword());
         values.put("phone", login.getPhone());
+        values.put("bad_tries", login.getBadTries());
 
         String where = "id = ?";
 
@@ -128,6 +112,47 @@ public class LoginsController extends DatabaseHandler {
         db.close();
 
         return deleteSuccessful;
+
+    }
+
+    private Login readRecord(Cursor cursor) {
+        Login login = new Login();
+
+        login.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("id"))));
+        login.setLogin(cursor.getString(cursor.getColumnIndex("login")));
+        login.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+        login.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
+        login.setBadTries(cursor.getInt(cursor.getColumnIndex("bad_tries")));
+
+        return login;
+    }
+
+    public Login readRandomRecord() {
+
+        Login login = null;
+
+        String sql = "SELECT * FROM logins";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if (cursor.getCount() == 0) {
+            return null;
+        }
+
+        int position = random.nextInt(cursor.getCount());
+
+        if (cursor.moveToPosition(position)) {
+
+            login = readRecord(cursor);
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return login;
 
     }
 }
