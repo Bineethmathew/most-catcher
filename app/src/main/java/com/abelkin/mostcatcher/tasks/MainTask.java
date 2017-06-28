@@ -38,7 +38,7 @@ public class MainTask extends AsyncTask<Integer, String, Void> {
                     }
                 } else {
                     errorShown = false;
-                    Session session = restController.authorize(login, mContext);
+                    Session session = restController.authorize(login);
 
                     if (session != null) {
                         publishProgress("Авторизовались");

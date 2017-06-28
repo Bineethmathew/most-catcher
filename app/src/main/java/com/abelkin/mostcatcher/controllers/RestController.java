@@ -25,26 +25,30 @@ public class RestController {
         mContext = context;
     }
 
-    private Login badTry(Login login) {
+    private void badTry(Login login) {
         login.setBadTries(login.getBadTries() + 1);
         LoginsController loginsController = new LoginsController(mContext);
         loginsController.update(login);
-        return login;
     }
 
-    private Login goodTry(Login login) {
+    private void goodTry(Login login) {
         login.setBadTries(0);
         LoginsController loginsController = new LoginsController(mContext);
         loginsController.update(login);
-        return login;
     }
 
-    public Session authorize(Login login, Context context) {
+    public Session authorize(Login login) {
 
         OkHttpClient client = new OkHttpClient();
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://most.373soft.ru/bridge-1.1/ws/driverServices/authorization")
-                .newBuilder();
+        HttpUrl.Builder urlBuilder;
+
+        try {
+            urlBuilder = HttpUrl.parse("http://most.373soft.ru/bridge-1.1/ws/driverServices/authorization")
+                    .newBuilder();
+        } catch (Exception e) {
+            return null;
+        }
 
         urlBuilder.addQueryParameter("contractNumber", login.getLogin());
         urlBuilder.addQueryParameter("password", Md5.md5(login.getPassword()));
@@ -110,5 +114,7 @@ public class RestController {
         return session;
 
     }
+
+
 
 }
