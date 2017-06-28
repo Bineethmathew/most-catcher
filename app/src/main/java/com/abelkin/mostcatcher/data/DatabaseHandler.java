@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "MostCatcherDatabase";
 
     public DatabaseHandler(Context context) {
@@ -34,6 +34,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "checked INT )";
 
         db.execSQL(sql);
+
+        sql = "INSERT INTO logins (login, password, phone, bad_tries) VALUES ('2002', '423198', '79124818074', 0)";
+
+        db.execSQL(sql);
+
+        sql = "INSERT INTO cities (name, checked) VALUES ('Ижевск', '0')";
+        db.execSQL(sql);
+
+        sql = "INSERT INTO cities (name, checked) VALUES ('Пермь', '0')";
+        db.execSQL(sql);
+
+        sql = "INSERT INTO cities (name, checked) VALUES ('Казань', '0')";
+        db.execSQL(sql);
+
+        sql = "INSERT INTO cities (name, checked) VALUES ('Набережные Челны', '0')";
+        db.execSQL(sql);
+
 
     }
 
