@@ -53,7 +53,7 @@ public class OnLongClickListenerCity implements View.OnLongClickListener {
         final EditText editTextChecked = (EditText) formElementsView.findViewById(R.id.city_input_form_checked);
 
         textViewName.setText(city.getName());
-        editTextChecked.setText(city.getChecked());
+        editTextChecked.setText(String.valueOf(city.getChecked()));
 
         new AlertDialog.Builder(context)
                 .setView(formElementsView)

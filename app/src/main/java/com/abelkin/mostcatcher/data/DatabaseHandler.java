@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "MostCatcherDatabase";
 
     public DatabaseHandler(Context context) {
@@ -24,11 +24,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "login TEXT, " +
                 "password TEXT, " +
                 "phone TEXT," +
-                "bad_tries INT ); " +
-                "CREATE TABLE cities " +
+                "bad_tries INT )";
+
+        db.execSQL(sql);
+
+        sql = "CREATE TABLE cities " +
                 "( id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT, " +
-                "checked INT ); ";
+                "checked INT )";
 
         db.execSQL(sql);
 
@@ -37,8 +40,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        String sql = "DROP TABLE IF EXISTS logins; " +
-                "DROP TABLE IF EXISTS cities;";
+        String sql = "DROP TABLE IF EXISTS logins";
+        db.execSQL(sql);
+
+        sql = "DROP TABLE IF EXISTS cities";
+
         db.execSQL(sql);
 
         onCreate(db);

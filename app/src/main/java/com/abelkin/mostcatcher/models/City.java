@@ -32,4 +32,8 @@ public class City {
     public void setChecked(int checked) {
         this.checked = checked;
     }
+
+    public String toString() {
+        return name + ((checked == 0) ? " участвует в выборе" : " не участвует в выборе");
+    }
 }

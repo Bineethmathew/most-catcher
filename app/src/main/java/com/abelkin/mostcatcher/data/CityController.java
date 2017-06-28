@@ -75,13 +75,11 @@ public class CityController extends DatabaseHandler {
 
     public boolean exist(String cityName) {
 
-        City city = null;
-
-        String sql = "SELECT * FROM cities WHERE lower(trim(name)) = '" + cityName.toLowerCase().trim() + "'";
+        String sql = "SELECT * FROM cities WHERE name = ?";
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery(sql, null);
+        Cursor cursor = db.rawQuery(sql, new String[]{cityName.trim()});
 
         return cursor.getCount() > 0;
 
@@ -120,7 +118,7 @@ public class CityController extends DatabaseHandler {
         return createSuccessful;
     }
 
-    public String mergeCities(List<String> cityNames) {
+    public synchronized String mergeCities(List<String> cityNames) {
 
         String result = "";
 
@@ -129,6 +127,7 @@ public class CityController extends DatabaseHandler {
             if (!exist(cityName)) {
                 City city = new City();
                 city.setName(cityName.trim());
+                create(city);
                 result += cityName + ", ";
             }
 

@@ -177,7 +177,7 @@ public class RestController {
                     String cityName = addressFrom.getString("city");
                     int position = cityName.indexOf(' ');
                     int position2 = cityName.indexOf(',');
-                    if (position2 != -1 && position2 < position) {
+                    if (position2 != -1) {
                         position = position2;
                     }
                     if (position != -1) {
