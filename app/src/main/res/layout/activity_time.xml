@@ -28,11 +28,12 @@
                       android:layout_weight="1"
                       android:padding="10dp"
                       android:textSize="16sp"
-                      android:text="Начало интервала"/>
+                      android:text="Начало интервала (ч)"/>
             <EditText
                 android:id="@+id/activity_time_from"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:layout_weight="1" />
         </LinearLayout>
 
@@ -48,11 +49,12 @@
                       android:layout_weight="1"
                       android:padding="10dp"
                       android:textSize="16sp"
-                      android:text="Конец интервала"/>
+                      android:text="Конец интервала (ч)"/>
             <EditText
                 android:id="@+id/activity_time_to"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:layout_weight="1" />
 
         </LinearLayout>
@@ -62,7 +64,7 @@
             android:layout_width="119dp"
             android:layout_height="wrap_content"
             android:id="@+id/button"
-            />
+            android:onClick="savePreferences"/>
 
     </LinearLayout>
 

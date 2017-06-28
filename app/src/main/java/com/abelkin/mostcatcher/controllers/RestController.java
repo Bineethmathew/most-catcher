@@ -1,6 +1,9 @@
 package com.abelkin.mostcatcher.controllers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import com.abelkin.mostcatcher.MainActivity;
+import com.abelkin.mostcatcher.R;
 import com.abelkin.mostcatcher.data.CityController;
 import com.abelkin.mostcatcher.data.LoginController;
 import com.abelkin.mostcatcher.helpers.Md5;
@@ -204,13 +207,21 @@ public class RestController {
 
                         Date currentDate = new Date();
 
-                        Long lowerBound = 30 * 60 * 1000l;
-                        Long upperBound = 9 * 60 * 60 * 1000l;
+                        SharedPreferences sharedPref = mContext.getSharedPreferences(
+                                mContext.getString(R.string.preference_file_key),
+                                Context.MODE_PRIVATE);
+
+                        Long lowerBound = sharedPref.getLong(mContext.getString(R.string.lower_bound),
+                                0L);
+                        Long upperBound = sharedPref.getLong(mContext.getString(R.string.upper_bound),
+                                0L);
+
                         if (date.getTime() - currentDate.getTime() > lowerBound &&
                                 date.getTime() - currentDate.getTime() < upperBound) {
                             Long orderId = order.getLong("orderId");
-                            //takeOrder(session, orderId);
-                            result += " Взяли заказ: " + cityFrom + "-" + cityTo;
+                            if (takeOrder(session, orderId)) {
+                                result += " Взяли заказ: " + cityFrom + "-" + cityTo;
+                            }
                         }
                     }
 
