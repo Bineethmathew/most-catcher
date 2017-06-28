@@ -12,9 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by abelkin on 28.06.2017.
@@ -180,21 +178,39 @@ public class RestController {
                     JSONObject order = orders.getJSONObject(i);
 
                     JSONObject addressFrom = order.getJSONObject("addressFrom");
-                    String cityName = addressFrom.getString("city");
-                    int position = cityName.indexOf(' ');
-                    int position2 = cityName.indexOf(',');
-                    if (position2 != -1) {
-                        position = position2;
-                    }
-                    if (position != -1) {
-                        cityName = cityName.substring(0, position);
-                    }
-                    cityNames.add(cityName);
+                    String cityFrom = getCity(addressFrom);
+                    cityNames.add(cityFrom);
+
+                    JSONObject addressTo = order.getJSONObject("addressTo");
+                    String cityTo = getCity(addressTo);
+                    cityNames.add(cityTo);
+
+                    boolean isCityFromOk = false;
+                    boolean isCityToOk = false;
 
                     for (City city : checkedCities) {
-                        if (city.getName().equals(cityName)) {
-                            //TODO реализовать фильтр по времени и схватить заказ
-                            break;
+                        if (city.getName().equals(cityFrom)) {
+                            isCityFromOk = true;
+                        }
+                        if (city.getName().equals(cityTo)) {
+                            isCityToOk = true;
+                        }
+                    }
+
+                    if (isCityFromOk && isCityToOk) {
+                        Long time = order.getLong("desiredTime");
+                        Date date = new Date();
+                        date.setTime(time);
+
+                        Date currentDate = new Date();
+
+                        Long lowerBound = 30 * 60 * 1000l;
+                        Long upperBound = 9 * 60 * 60 * 1000l;
+                        if (date.getTime() - currentDate.getTime() > lowerBound &&
+                                date.getTime() - currentDate.getTime() < upperBound) {
+                            Long orderId = order.getLong("orderId");
+                            //takeOrder(session, orderId);
+                            result += " Взяли заказ: " + cityFrom + "-" + cityTo;
                         }
                     }
 
@@ -217,6 +233,71 @@ public class RestController {
 
         return result;
 
+    }
+
+    private Date fixTimeZone(Date date) {
+        TimeZone ourTimeZone = Calendar.getInstance().getTimeZone();
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+3"));
+        long diff = calendar.getTimeZone().getRawOffset() - ourTimeZone.getRawOffset();
+
+        date.setTime(date.getTime() - diff);
+        return date;
+    }
+
+    private String getCity(JSONObject address) throws JSONException {
+        String cityName = address.getString("city");
+        int position = cityName.indexOf(' ');
+        int position2 = cityName.indexOf(',');
+        if (position2 != -1) {
+            position = position2;
+        }
+        if (position != -1) {
+            cityName = cityName.substring(0, position);
+        }
+        return cityName;
+    }
+
+    private boolean takeOrder(Session session, Long orderId) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        HttpUrl.Builder urlBuilder;
+
+        try {
+            urlBuilder = HttpUrl.parse("http://most.373soft.ru/bridge-1.1/ws/driverServices/newAction")
+                    .newBuilder();
+        } catch (Exception e) {
+            return false;
+        }
+
+        String url = urlBuilder.build().toString();
+
+        RequestBody body = RequestBody.create(JSON, "{\"orderId\":" + orderId + "," +
+                "\"actionName\":\"DRIVER_TAKE_ORDER\",\"comment\":" +
+                "\"Взятие предварительного или нового несрочного заказа\"}");
+
+        Request request = new Request.Builder()
+                .header("Accept", "application/json, text/javascript; q=0.9")
+                .header("User-Agent", "Android::4.4.2::19::MDR::IQ4502 Quad::Fly_Era_Energy_1::terminal_bridge::1.0.17::17")
+                .header("Content-Type", "application/json")
+                .header("Cookie", session.getJsessionid())
+                .url(url)
+                .post(body)
+                .build();
+
+        Response response = null;
+
+        try {
+            response = client.newCall(request).execute();
+        } catch (IOException e) {
+            return false;
+        }
+
+        if (response != null && response.code() == 200) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
