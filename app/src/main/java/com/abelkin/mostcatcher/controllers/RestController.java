@@ -4,6 +4,7 @@ import android.content.Context;
 import com.abelkin.mostcatcher.data.CityController;
 import com.abelkin.mostcatcher.data.LoginController;
 import com.abelkin.mostcatcher.helpers.Md5;
+import com.abelkin.mostcatcher.models.City;
 import com.abelkin.mostcatcher.models.Login;
 import okhttp3.*;
 import org.json.JSONArray;
@@ -171,8 +172,13 @@ public class RestController {
 
                 List<String> cityNames = new ArrayList<String>();
 
+                CityController cityController = new CityController(mContext);
+                List<City> checkedCities = cityController.readChecked();
+
                 for (int i = 0; i < orders.length(); i++) {
+
                     JSONObject order = orders.getJSONObject(i);
+
                     JSONObject addressFrom = order.getJSONObject("addressFrom");
                     String cityName = addressFrom.getString("city");
                     int position = cityName.indexOf(' ');
@@ -184,10 +190,21 @@ public class RestController {
                         cityName = cityName.substring(0, position);
                     }
                     cityNames.add(cityName);
+
+                    for (City city : checkedCities) {
+                        if (city.getName().equals(cityName)) {
+                            //TODO реализовать фильтр по времени и схватить заказ
+                            break;
+                        }
+                    }
+
                 }
 
-                CityController cityController = new CityController(mContext);
-                result = "Добавлены города: " + cityController.mergeCities(cityNames);
+                String cityList = cityController.mergeCities(cityNames);
+
+                if (!cityList.isEmpty()) {
+                    result += "Добавлены города: " + cityList;
+                }
 
             } catch (Exception e) {
                 return "Ошибка при получении заказов";

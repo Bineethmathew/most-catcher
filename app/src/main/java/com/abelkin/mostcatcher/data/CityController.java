@@ -50,6 +50,28 @@ public class CityController extends DatabaseHandler {
         return recordsList;
     }
 
+    public List<City> readChecked() {
+
+        List<City> recordsList = new ArrayList<>();
+
+        String sql = "SELECT * FROM cities WHERE checked = ?";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sql, new String[]{"1"});
+
+        if (cursor.moveToFirst()) {
+            do {
+                City city= readRecord(cursor);
+                recordsList.add(city);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return recordsList;
+    }
+
     public City readSingleRecord(int cityId) {
 
         City city = null;
@@ -134,7 +156,7 @@ public class CityController extends DatabaseHandler {
         }
 
         if (!result.isEmpty()) {
-            result = result.substring(0, result.length() - 1);
+            result = result.substring(0, result.length() - 2);
         }
 
         return result;
