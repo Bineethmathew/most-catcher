@@ -7,5 +7,7 @@
     <string name="login">Логин</string>
     <string name="password">Пароль</string>
     <string name="phone">Телефон</string>
+    <string name="city">Город</string>
+    <string name="checked">Отмечен</string>
 
 </resources>

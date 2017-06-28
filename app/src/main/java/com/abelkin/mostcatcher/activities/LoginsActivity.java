@@ -7,9 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.abelkin.mostcatcher.R;
 import com.abelkin.mostcatcher.activities.views.OnClickListenerCreateLogin;
-import com.abelkin.mostcatcher.data.LoginsController;
+import com.abelkin.mostcatcher.data.LoginController;
 import com.abelkin.mostcatcher.models.Login;
-import com.abelkin.mostcatcher.tasks.MainTask;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class LoginsActivity extends AppCompatActivity {
         LinearLayout linearLayoutRecords = (LinearLayout) findViewById(R.id.activity_logins_linear_layout);
         linearLayoutRecords.removeAllViews();
 
-        List<Login> logins = new LoginsController(this).read();
+        List<Login> logins = new LoginController(this).read();
 
         if (logins.size() > 0) {
 

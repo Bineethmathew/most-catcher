@@ -13,11 +13,11 @@ import java.util.Random;
 /**
  * Created by abelkin on 27.06.2017.
  */
-public class LoginsController extends DatabaseHandler {
+public class LoginController extends DatabaseHandler {
 
     private static Random random = new Random();
 
-    public LoginsController(Context context) {
+    public LoginController(Context context) {
         super(context);
     }
 
@@ -42,7 +42,7 @@ public class LoginsController extends DatabaseHandler {
 
         List<Login> recordsList = new ArrayList<>();
 
-        String sql = "SELECT * FROM logins ORDER BY login DESC";
+        String sql = "SELECT * FROM logins ORDER BY login";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sql, null);

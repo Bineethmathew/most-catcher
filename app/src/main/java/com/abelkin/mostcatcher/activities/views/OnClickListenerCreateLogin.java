@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.abelkin.mostcatcher.R;
 import com.abelkin.mostcatcher.activities.LoginsActivity;
-import com.abelkin.mostcatcher.data.LoginsController;
+import com.abelkin.mostcatcher.data.LoginController;
 import com.abelkin.mostcatcher.models.Login;
 
 /**
@@ -43,7 +43,7 @@ public class OnClickListenerCreateLogin implements View.OnClickListener {
                                 loginObj.setPassword(password);
                                 loginObj.setPhone(phone);
 
-                                boolean createSuccessful = new LoginsController(context).create(loginObj);
+                                boolean createSuccessful = new LoginController(context).create(loginObj);
 
                                 if(createSuccessful){
                                     Toast.makeText(context, "Логин добавлен.", Toast.LENGTH_SHORT).show();

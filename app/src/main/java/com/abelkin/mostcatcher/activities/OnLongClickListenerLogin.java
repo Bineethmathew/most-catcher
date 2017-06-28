@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.abelkin.mostcatcher.R;
-import com.abelkin.mostcatcher.data.LoginsController;
+import com.abelkin.mostcatcher.data.LoginController;
 import com.abelkin.mostcatcher.models.Login;
 
 /**
@@ -35,7 +35,7 @@ public class OnLongClickListenerLogin implements View.OnLongClickListener {
                             editRecord(Integer.parseInt(id));
                         } else if (item == 1) {
 
-                            boolean deleteSuccessful = new LoginsController(context).delete(Integer.parseInt(id));
+                            boolean deleteSuccessful = new LoginController(context).delete(Integer.parseInt(id));
 
                             if (deleteSuccessful){
                                 Toast.makeText(context, "Запись была удалена.", Toast.LENGTH_SHORT).show();
@@ -56,8 +56,8 @@ public class OnLongClickListenerLogin implements View.OnLongClickListener {
     }
 
     public void editRecord(final int loginId) {
-        final LoginsController loginsController = new LoginsController(context);
-        Login login = loginsController.readSingleRecord(loginId);
+        final LoginController loginController = new LoginController(context);
+        Login login = loginController.readSingleRecord(loginId);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View formElementsView = inflater.inflate(R.layout.login_input_form, null, false);
@@ -83,7 +83,7 @@ public class OnLongClickListenerLogin implements View.OnLongClickListener {
                                 loginObj.setPassword(editTextPassword.getText().toString());
                                 loginObj.setPhone(editTextPhone.getText().toString());
 
-                                boolean updateSuccessful = loginsController.update(loginObj);
+                                boolean updateSuccessful = loginController.update(loginObj);
 
                                 if(updateSuccessful){
                                     Toast.makeText(context, "Успешно обновлено.", Toast.LENGTH_SHORT).show();

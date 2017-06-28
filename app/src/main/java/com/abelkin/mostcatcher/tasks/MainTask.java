@@ -3,10 +3,9 @@ package com.abelkin.mostcatcher.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import com.abelkin.mostcatcher.activities.LoginsActivity;
 import com.abelkin.mostcatcher.controllers.RestController;
 import com.abelkin.mostcatcher.controllers.Session;
-import com.abelkin.mostcatcher.data.LoginsController;
+import com.abelkin.mostcatcher.data.LoginController;
 import com.abelkin.mostcatcher.models.Login;
 
 import java.util.concurrent.TimeUnit;
@@ -29,8 +28,8 @@ public class MainTask extends AsyncTask<Integer, String, Void> {
             while (true) {
                 RestController restController = new RestController(mContext);
 
-                LoginsController loginsController = new LoginsController(mContext);
-                Login login = loginsController.readRandomRecord();
+                LoginController loginController = new LoginController(mContext);
+                Login login = loginController.readRandomRecord();
                 if (login == null) {
                     if (!errorShown) {
                         publishProgress("Нужно создать хотя бы 1 логин");
@@ -42,6 +41,7 @@ public class MainTask extends AsyncTask<Integer, String, Void> {
 
                     if (session != null) {
                         publishProgress("Авторизовались");
+                        publishProgress(restController.processData(session));
                     } else {
                         publishProgress("Не удалось авторизоваться");
                     }
