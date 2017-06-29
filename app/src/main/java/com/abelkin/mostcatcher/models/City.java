@@ -7,7 +7,8 @@ public class City {
 
     int id;
     String name;
-    int checked;
+    int fromChecked;
+    int toChecked;
 
     public int getId() {
         return id;
@@ -25,15 +26,24 @@ public class City {
         this.name = name;
     }
 
-    public int getChecked() {
-        return checked;
+    public int getFromChecked() {
+        return fromChecked;
     }
 
-    public void setChecked(int checked) {
-        this.checked = checked;
+    public void setFromChecked(int fromChecked) {
+        this.fromChecked = fromChecked;
+    }
+
+    public int getToChecked() {
+        return toChecked;
+    }
+
+    public void setToChecked(int toChecked) {
+        this.toChecked = toChecked;
     }
 
     public String toString() {
-        return name + ", есть фильтр: " + ((checked == 0) ? "нет" : "да");
+        return name + ", брать ИЗ: " + ((fromChecked == 0) ? "нет" : "да") +
+                " брать В: " + ((toChecked == 0) ? "нет" : "да");
     }
 }

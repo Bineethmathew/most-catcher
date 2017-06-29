@@ -23,7 +23,8 @@ public class CityController extends DatabaseHandler {
 
         city.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("id"))));
         city.setName(cursor.getString(cursor.getColumnIndex("name")));
-        city.setChecked(cursor.getInt(cursor.getColumnIndex("checked")));
+        city.setFromChecked(cursor.getInt(cursor.getColumnIndex("from_checked")));
+        city.setToChecked(cursor.getInt(cursor.getColumnIndex("to_checked")));
 
         return city;
     }
@@ -54,10 +55,10 @@ public class CityController extends DatabaseHandler {
 
         List<City> recordsList = new ArrayList<>();
 
-        String sql = "SELECT * FROM cities WHERE checked = ?";
+        String sql = "SELECT * FROM cities WHERE from_checked = ? OR to_checked = ?";
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(sql, new String[]{"1"});
+        Cursor cursor = db.rawQuery(sql, new String[]{"1", "1"});
 
         if (cursor.moveToFirst()) {
             do {
@@ -111,7 +112,8 @@ public class CityController extends DatabaseHandler {
 
         ContentValues values = new ContentValues();
 
-        values.put("checked", city.getChecked());
+        values.put("from_checked", city.getFromChecked());
+        values.put("to_checked", city.getToChecked());
 
         String where = "id = ?";
 
@@ -130,7 +132,8 @@ public class CityController extends DatabaseHandler {
         ContentValues values = new ContentValues();
 
         values.put("name", city.getName());
-        values.put("checked", 0);
+        values.put("from_checked", 0);
+        values.put("to_checked", 0);
 
         SQLiteDatabase db = this.getWritableDatabase();
 

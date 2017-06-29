@@ -12,13 +12,20 @@
         android:hint="@string/city"
         android:maxLines="1"/>
 
-    <EditText
-        android:id="@+id/city_input_form_checked"
+    <CheckBox
+        android:id="@+id/city_input_form_from_check"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/city_input_form_name"
-        android:hint="@string/checked"
-        android:maxLines="1"/>
+        android:hint="@string/from_checked"/>
+
+    <CheckBox
+        android:id="@+id/city_input_form_to_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/city_input_form_from_check"
+        android:hint="@string/to_checked"/>
 
 </RelativeLayout>

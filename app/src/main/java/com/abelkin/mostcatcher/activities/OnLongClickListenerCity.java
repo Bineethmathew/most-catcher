@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,8 +18,8 @@ import com.abelkin.mostcatcher.models.City;
  */
 public class OnLongClickListenerCity implements View.OnLongClickListener {
 
-    Context context;
-    String id;
+    private Context context;
+    private String id;
 
     @Override
     public boolean onLongClick(View view) {
@@ -26,7 +27,7 @@ public class OnLongClickListenerCity implements View.OnLongClickListener {
         context = view.getContext();
         id = view.getTag().toString();
 
-        final CharSequence[] items = { "Edit"};
+        final CharSequence[] items = { "Отметить в фильтре"};
 
         new AlertDialog.Builder(context).setTitle("Город")
                 .setItems(items, new DialogInterface.OnClickListener() {
@@ -50,10 +51,12 @@ public class OnLongClickListenerCity implements View.OnLongClickListener {
         final View formElementsView = inflater.inflate(R.layout.city_input_form, null, false);
 
         final TextView textViewName = (TextView) formElementsView.findViewById(R.id.city_input_form_name);
-        final EditText editTextChecked = (EditText) formElementsView.findViewById(R.id.city_input_form_checked);
+        final CheckBox checkBoxFrom = (CheckBox) formElementsView.findViewById(R.id.city_input_form_from_check);
+        final CheckBox checkBoxTo = (CheckBox) formElementsView.findViewById(R.id.city_input_form_to_check);
 
         textViewName.setText(city.getName());
-        editTextChecked.setText(String.valueOf(city.getChecked()));
+        checkBoxFrom.setChecked(city.getFromChecked() == 1);
+        checkBoxTo.setChecked(city.getToChecked() == 1);
 
         new AlertDialog.Builder(context)
                 .setView(formElementsView)
@@ -64,7 +67,8 @@ public class OnLongClickListenerCity implements View.OnLongClickListener {
 
                                 City cityObj = new City();
                                 cityObj.setId(cityId);
-                                cityObj.setChecked(Integer.valueOf(editTextChecked.getText().toString()));
+                                cityObj.setFromChecked(checkBoxFrom.isChecked() ? 1 : 0);
+                                cityObj.setToChecked(checkBoxTo.isChecked() ? 1 : 0);
 
                                 boolean updateSuccessful = cityController.update(cityObj);
 

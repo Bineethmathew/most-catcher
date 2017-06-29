@@ -192,10 +192,10 @@ public class RestController {
                     boolean isCityToOk = false;
 
                     for (City city : checkedCities) {
-                        if (city.getName().equals(cityFrom)) {
+                        if (city.getName().equals(cityFrom) && city.getFromChecked() == 1) {
                             isCityFromOk = true;
                         }
-                        if (city.getName().equals(cityTo)) {
+                        if (city.getName().equals(cityTo) && city.getToChecked() == 1) {
                             isCityToOk = true;
                         }
                     }
@@ -219,9 +219,9 @@ public class RestController {
                         if (date.getTime() - currentDate.getTime() > lowerBound &&
                                 date.getTime() - currentDate.getTime() < upperBound) {
                             Long orderId = order.getLong("orderId");
-                            //if (takeOrder(session, orderId)) {
+                            if (takeOrder(session, orderId)) {
                                 result += " Взяли заказ: " + cityFrom + "-" + cityTo;
-                           // }
+                            }
                         }
                     }
 

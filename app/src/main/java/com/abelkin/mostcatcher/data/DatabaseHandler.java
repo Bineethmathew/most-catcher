@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "MostCatcherDatabase";
 
     public DatabaseHandler(Context context) {
@@ -31,7 +31,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sql = "CREATE TABLE cities " +
                 "( id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT, " +
-                "checked INT )";
+                "from_checked INT," +
+                "to_checked INT )";
 
         db.execSQL(sql);
 
@@ -39,16 +40,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.execSQL(sql);
 
-        sql = "INSERT INTO cities (name, checked) VALUES ('Ижевск', '0')";
+        sql = "INSERT INTO cities (name, from_checked, to_checked) VALUES ('Ижевск', 0, 0)";
         db.execSQL(sql);
 
-        sql = "INSERT INTO cities (name, checked) VALUES ('Пермь', '0')";
+        sql = "INSERT INTO cities (name, from_checked, to_checked) VALUES ('Пермь', 0, 0)";
         db.execSQL(sql);
 
-        sql = "INSERT INTO cities (name, checked) VALUES ('Казань', '0')";
+        sql = "INSERT INTO cities (name, from_checked, to_checked) VALUES ('Казань', 0, 0)";
         db.execSQL(sql);
 
-        sql = "INSERT INTO cities (name, checked) VALUES ('Набережные Челны', '0')";
+        sql = "INSERT INTO cities (name, from_checked, to_checked) VALUES ('Набережные Челны', 0, 0)";
         db.execSQL(sql);
 
 
