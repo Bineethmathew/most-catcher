@@ -219,9 +219,9 @@ public class RestController {
                         if (date.getTime() - currentDate.getTime() > lowerBound &&
                                 date.getTime() - currentDate.getTime() < upperBound) {
                             Long orderId = order.getLong("orderId");
-                            if (takeOrder(session, orderId)) {
+                            //if (takeOrder(session, orderId)) {
                                 result += " Взяли заказ: " + cityFrom + "-" + cityTo;
-                            }
+                           // }
                         }
                     }
 
@@ -268,7 +268,7 @@ public class RestController {
         return cityName;
     }
 
-    private boolean takeOrder(Session session, Long orderId) {
+    private synchronized boolean takeOrder(Session session, Long orderId) {
 
         OkHttpClient client = new OkHttpClient();
 
