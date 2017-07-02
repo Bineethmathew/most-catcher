@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.abelkin.mostcatcher.R;
 import com.abelkin.mostcatcher.data.LoginController;
 import com.abelkin.mostcatcher.models.Login;
+import com.abelkin.mostcatcher.tasks.MainTask;
 
 /**
  * Created by abelkin on 27.06.2017.
@@ -25,7 +26,7 @@ public class OnLongClickListenerLogin implements View.OnLongClickListener {
         context = view.getContext();
         id = view.getTag().toString();
 
-        final CharSequence[] items = { "Edit", "Delete" };
+        final CharSequence[] items = { "Редактировать", "Удалить" };
 
         new AlertDialog.Builder(context).setTitle("Логин")
                 .setItems(items, new DialogInterface.OnClickListener() {
@@ -84,6 +85,8 @@ public class OnLongClickListenerLogin implements View.OnLongClickListener {
                                 loginObj.setPhone(editTextPhone.getText().toString());
 
                                 boolean updateSuccessful = loginController.update(loginObj);
+
+                                MainTask.updateLoginHashMap(loginObj);
 
                                 if(updateSuccessful){
                                     Toast.makeText(context, "Успешно обновлено.", Toast.LENGTH_SHORT).show();

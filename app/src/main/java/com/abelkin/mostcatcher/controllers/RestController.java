@@ -9,6 +9,8 @@ import com.abelkin.mostcatcher.data.LoginController;
 import com.abelkin.mostcatcher.helpers.Md5;
 import com.abelkin.mostcatcher.models.City;
 import com.abelkin.mostcatcher.models.Login;
+import com.abelkin.mostcatcher.models.LoginSession;
+import com.abelkin.mostcatcher.tasks.MainTask;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,7 +45,7 @@ public class RestController {
         loginController.update(login);
     }
 
-    public Session authorize(Login login) {
+    public LoginSession authorize(LoginSession loginSession) {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -56,9 +58,9 @@ public class RestController {
             return null;
         }
 
-        urlBuilder.addQueryParameter("contractNumber", login.getLogin());
-        urlBuilder.addQueryParameter("password", Md5.md5(login.getPassword()));
-        urlBuilder.addQueryParameter("phone", login.getPhone());
+        urlBuilder.addQueryParameter("contractNumber", loginSession.getLogin().getLogin());
+        urlBuilder.addQueryParameter("password", Md5.md5(loginSession.getLogin().getPassword()));
+        urlBuilder.addQueryParameter("phone", loginSession.getLogin().getPhone());
 
         String url = urlBuilder.build().toString();
 
@@ -74,7 +76,7 @@ public class RestController {
             response = client.newCall(request).execute();
         } catch (IOException e) {
             e.printStackTrace();
-            badTry(login);
+            badTry(loginSession.getLogin());
             return null;
         }
 
@@ -85,12 +87,12 @@ public class RestController {
                 String jsonData = response.body().string();
                 JSONObject jsonObject = new JSONObject(jsonData);
                 if (!jsonObject.getBoolean("isSuccess")) {
-                    badTry(login);
+                    badTry(loginSession.getLogin());
                     return null;
                 }
             } catch (JSONException | IOException e) {
                 e.printStackTrace();
-                badTry(login);
+                badTry(loginSession.getLogin());
                 return null;
             }
 
@@ -102,26 +104,22 @@ public class RestController {
             }
 
             if (jsessionid.isEmpty()) {
-                badTry(login);
+                badTry(loginSession.getLogin());
                 return null;
             }
 
 
         } else {
-            badTry(login);
+            badTry(loginSession.getLogin());
             return null;
         }
 
-        goodTry(login);
-        Session session = new Session();
-        session.setLogin(login);
-        session.setJsessionid(jsessionid);
-
-        return session;
+        goodTry(loginSession.getLogin());
+        return new LoginSession(loginSession.getLogin(), jsessionid);
 
     }
 
-    public String processData(Session session) {
+    public synchronized String processData(LoginSession loginSession) {
 
         String result = "";
 
@@ -151,7 +149,7 @@ public class RestController {
                 .header("User-Agent", "Android::4.4.2::19::MDR::IQ4502 Quad::Fly_Era_Energy_1::terminal_bridge::1.0.17::17")
                 .header("Accept-Language", "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3")
                 .header("Content-Type", "application/json")
-                .header("Cookie", session.getJsessionid())
+                .header("Cookie", loginSession.getSession())
                 .url(url)
                 .post(body)
                 .build();
@@ -161,6 +159,7 @@ public class RestController {
         try {
             response = client.newCall(request).execute();
         } catch (IOException e) {
+            loginSession.setSession(null);
             return "Ошибка при получении заказов";
         }
 
@@ -171,10 +170,9 @@ public class RestController {
 
                 JSONArray orders = jsonObject.getJSONArray("reservationOrders");
 
-                List<String> cityNames = new ArrayList<String>();
+                final List<String> cityNames = new ArrayList<String>();
 
-                CityController cityController = new CityController(mContext);
-                List<City> checkedCities = cityController.readChecked();
+                final CityController cityController = new CityController(mContext);
 
                 for (int i = 0; i < orders.length(); i++) {
 
@@ -188,50 +186,31 @@ public class RestController {
                     String cityTo = getCity(addressTo);
                     cityNames.add(cityTo);
 
-                    boolean isCityFromOk = false;
-                    boolean isCityToOk = false;
 
-                    for (City city : checkedCities) {
-                        if (city.getName().equals(cityFrom) && city.getFromChecked() == 1) {
-                            isCityFromOk = true;
-                        }
-                        if (city.getName().equals(cityTo) && city.getToChecked() == 1) {
-                            isCityToOk = true;
-                        }
-                    }
-
-                    if (isCityFromOk && isCityToOk) {
+                    if (MainTask.getFromChecked(cityFrom) && MainTask.getToChecked(cityTo)) {
                         Long time = order.getLong("desiredTime");
                         Date date = new Date();
                         date.setTime(time);
 
                         Date currentDate = new Date();
 
-                        SharedPreferences sharedPref = mContext.getSharedPreferences(
-                                mContext.getString(R.string.preference_file_key),
-                                Context.MODE_PRIVATE);
-
-                        Long lowerBound = sharedPref.getLong(mContext.getString(R.string.lower_bound),
-                                0L);
-                        Long upperBound = sharedPref.getLong(mContext.getString(R.string.upper_bound),
-                                0L);
-
-                        if (date.getTime() - currentDate.getTime() > lowerBound &&
-                                date.getTime() - currentDate.getTime() < upperBound) {
+                        if (date.getTime() - currentDate.getTime() > MainTask.LOWER_BOUND &&
+                                date.getTime() - currentDate.getTime() < MainTask.UPPER_BOUND) {
                             Long orderId = order.getLong("orderId");
-                            //if (takeOrder(session, orderId)) {
+                            if (takeOrder(loginSession, orderId)) {
                                 result += " Взяли заказ: " + cityFrom + "-" + cityTo;
-                            //}
+                            }
                         }
                     }
 
                 }
 
-                String cityList = cityController.mergeCities(cityNames);
+                new Thread(new Runnable(){
+                    public void run(){
+                        cityController.mergeCities(cityNames);
+                    }
+                }).start();
 
-                if (!cityList.isEmpty()) {
-                    result += "Добавлены города: " + cityList;
-                }
 
             } catch (Exception e) {
                 return "Ошибка при получении заказов";
@@ -239,6 +218,7 @@ public class RestController {
 
 
         } else {
+            loginSession.setSession(null);
             return "Ошибка при получении заказов";
         }
 
@@ -268,7 +248,7 @@ public class RestController {
         return cityName;
     }
 
-    private synchronized boolean takeOrder(Session session, Long orderId) {
+    private synchronized boolean takeOrder(LoginSession loginSession, Long orderId) {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -291,7 +271,7 @@ public class RestController {
                 .header("Accept", "application/json, text/javascript; q=0.9")
                 .header("User-Agent", "Android::4.4.2::19::MDR::IQ4502 Quad::Fly_Era_Energy_1::terminal_bridge::1.0.17::17")
                 .header("Content-Type", "application/json")
-                .header("Cookie", session.getJsessionid())
+                .header("Cookie", loginSession.getSession())
                 .url(url)
                 .post(body)
                 .build();
@@ -307,6 +287,7 @@ public class RestController {
         if (response != null && response.code() == 200) {
             return true;
         } else {
+            loginSession.setSession(null);
             return false;
         }
     }

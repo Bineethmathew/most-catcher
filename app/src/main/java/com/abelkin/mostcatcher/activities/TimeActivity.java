@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import com.abelkin.mostcatcher.R;
+import com.abelkin.mostcatcher.tasks.MainTask;
 
 public class TimeActivity extends AppCompatActivity {
 
@@ -23,12 +24,15 @@ public class TimeActivity extends AppCompatActivity {
                 0L);
         Long upperBound = sharedPref.getLong(getString(R.string.upper_bound),
                 0L);
+        Float period = sharedPref.getFloat(getString(R.string.period), 1.0f);
 
         EditText editTextFrom = (EditText)findViewById(R.id.activity_time_from);
         EditText editTextTo = (EditText)findViewById(R.id.activity_time_to);
+        EditText editTextPeriod = (EditText)findViewById(R.id.activity_time_period);
 
         editTextFrom.setText(String.valueOf(new Double(lowerBound) / 1000 / 60 / 60));
         editTextTo.setText(String.valueOf(new Double(upperBound) / 1000L / 60L / 60L));
+        editTextPeriod.setText(String.valueOf(period));
     }
 
     public void savePreferences(View view) {
@@ -40,12 +44,20 @@ public class TimeActivity extends AppCompatActivity {
 
         EditText editTextFrom = (EditText)findViewById(R.id.activity_time_from);
         EditText editTextTo = (EditText)findViewById(R.id.activity_time_to);
+        EditText editTextPeriod = (EditText)findViewById(R.id.activity_time_period);
 
-        editor.putLong(getString(R.string.lower_bound), Math.round(Double.parseDouble(editTextFrom.getText().toString())) *
-            1000L * 60L * 60L);
-        editor.putLong(getString(R.string.upper_bound), Math.round(Double.parseDouble(editTextTo.getText().toString())) *
-                1000L * 60L * 60L);
+        MainTask.LOWER_BOUND = Math.round(Double.parseDouble(editTextFrom.getText().toString())) *
+                1000L * 60L * 60L;
+        MainTask.UPPER_BOUND = Math.round(Double.parseDouble(editTextTo.getText().toString())) *
+                1000L * 60L * 60L;
+        MainTask.PERIOD = Float.parseFloat(editTextPeriod.getText().toString());
+
+        editor.putLong(getString(R.string.lower_bound), MainTask.LOWER_BOUND);
+        editor.putLong(getString(R.string.upper_bound), MainTask.UPPER_BOUND);
+        editor.putFloat(getString(R.string.period), MainTask.PERIOD);
         editor.commit();
+
+
 
         finish();
     }

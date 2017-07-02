@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.abelkin.mostcatcher.models.Login;
+import com.abelkin.mostcatcher.tasks.MainTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,8 @@ public class LoginController extends DatabaseHandler {
 
         boolean createSuccessful = db.insert("logins", null, values) > 0;
         db.close();
+
+        MainTask.updateLoginHashMap(login);
 
         return createSuccessful;
     }
@@ -105,6 +108,17 @@ public class LoginController extends DatabaseHandler {
     }
 
     public boolean delete(int id) {
+
+        List<Login> logins = read();
+        for (Login login : logins) {
+            if (login.getId() == id) {
+                if (MainTask.getLoginSessionHashMap() != null) {
+                    MainTask.getLoginSessionHashMap().remove(login.getLogin());
+                }
+                break;
+            }
+        }
+
         boolean deleteSuccessful = false;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -125,34 +139,5 @@ public class LoginController extends DatabaseHandler {
         login.setBadTries(cursor.getInt(cursor.getColumnIndex("bad_tries")));
 
         return login;
-    }
-
-    public Login readRandomRecord() {
-
-        Login login = null;
-
-        String sql = "SELECT * FROM logins";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(sql, null);
-
-        if (cursor.getCount() == 0) {
-            return null;
-        }
-
-        int position = random.nextInt(cursor.getCount());
-
-        if (cursor.moveToPosition(position)) {
-
-            login = readRecord(cursor);
-
-        }
-
-        cursor.close();
-        db.close();
-
-        return login;
-
     }
 }

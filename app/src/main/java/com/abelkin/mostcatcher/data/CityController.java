@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.abelkin.mostcatcher.models.City;
+import com.abelkin.mostcatcher.tasks.MainTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,28 +52,6 @@ public class CityController extends DatabaseHandler {
         return recordsList;
     }
 
-    public List<City> readChecked() {
-
-        List<City> recordsList = new ArrayList<>();
-
-        String sql = "SELECT * FROM cities WHERE from_checked = ? OR to_checked = ?";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(sql, new String[]{"1", "1"});
-
-        if (cursor.moveToFirst()) {
-            do {
-                City city= readRecord(cursor);
-                recordsList.add(city);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-
-        return recordsList;
-    }
-
     public City readSingleRecord(int cityId) {
 
         City city = null;
@@ -98,13 +77,21 @@ public class CityController extends DatabaseHandler {
 
     public boolean exist(String cityName) {
 
-        String sql = "SELECT * FROM cities WHERE name = ?";
+        if (MainTask.getCityHashMap() != null) {
 
-        SQLiteDatabase db = this.getWritableDatabase();
+            return MainTask.getCityHashMap().containsKey(cityName);
 
-        Cursor cursor = db.rawQuery(sql, new String[]{cityName.trim()});
+        } else {
 
-        return cursor.getCount() > 0;
+            String sql = "SELECT * FROM cities WHERE name = ?";
+
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            Cursor cursor = db.rawQuery(sql, new String[]{cityName.trim()});
+
+            return cursor.getCount() > 0;
+
+        }
 
     }
 
@@ -124,6 +111,8 @@ public class CityController extends DatabaseHandler {
         boolean updateSuccessful = db.update("cities", values, where, whereArgs) > 0;
         db.close();
 
+        MainTask.updateCityHashMap(city);
+
         return updateSuccessful;
     }
 
@@ -139,6 +128,8 @@ public class CityController extends DatabaseHandler {
 
         boolean createSuccessful = db.insert("cities", null, values) > 0;
         db.close();
+
+        MainTask.updateCityHashMap(city);
 
         return createSuccessful;
     }
