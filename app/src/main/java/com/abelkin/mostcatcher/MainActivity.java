@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mainTask = new MainTask(getApplicationContext());
-        mainTask.execute(5);
+        mainTask.execute(1);
     }
 
     public void openLogins(View view) {

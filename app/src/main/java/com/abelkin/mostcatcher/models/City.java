@@ -44,6 +44,6 @@ public class City {
 
     public String toString() {
         return name + ", брать ИЗ: " + ((fromChecked == 0) ? "нет" : "да") +
-                " брать В: " + ((toChecked == 0) ? "нет" : "да");
+                "; брать В: " + ((toChecked == 0) ? "нет" : "да");
     }
 }
