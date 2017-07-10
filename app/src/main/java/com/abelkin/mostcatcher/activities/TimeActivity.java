@@ -24,7 +24,7 @@ public class TimeActivity extends AppCompatActivity {
                 0L);
         Long upperBound = sharedPref.getLong(getString(R.string.upper_bound),
                 0L);
-        Float period = sharedPref.getFloat(getString(R.string.period), 1.0f);
+        Float period = sharedPref.getFloat(getString(R.string.period), 10.0f);
 
         EditText editTextFrom = (EditText)findViewById(R.id.activity_time_from);
         EditText editTextTo = (EditText)findViewById(R.id.activity_time_to);

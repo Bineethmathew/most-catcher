@@ -119,15 +119,15 @@ public class MainTask extends AsyncTask<Void, String, Void> {
 
         if (loginSession.getSession() == null) {
             loginSession = restController.authorize(loginSession);
-            loginSessionHashMap.put(login, loginSession);
-            if (loginSession.getSession() != null) {
-                publishProgress("Авторизовались с логином " + login);
-            } else {
+            if (loginSession == null) {
                 publishProgress("Не удалось авторизоваться с логином " + login);
+            } else {
+                loginSessionHashMap.put(login, loginSession);
+                publishProgress("Авторизовались с логином " + login);
             }
         }
 
-        if (loginSession.getSession() != null) {
+        if (loginSession != null && loginSession.getSession() != null) {
             return loginSession;
         } else {
             return null;
@@ -143,17 +143,22 @@ public class MainTask extends AsyncTask<Void, String, Void> {
             while (true) {
 
                 LoginSession loginSession = getRandomSession();
-                if (loginSession != null && loginSession.getSession() != null)
+
+                if (loginSession != null && loginSession.getSession() != null) {
                     publishProgress("Интервал (мс): " + (new Date().getTime() - checkPoint.getTime()));
                     checkPoint = new Date();
                     String result = restController.processData(loginSession);
                     if (result != null && !result.isEmpty())
                     publishProgress(result);
-                    // сессия пустая, если мы ничего не смогли получить, тогда и ждать не надо, надо получать новую сессию
-                    if (loginSession.getSession() != null) {
-                        TimeUnit.MILLISECONDS.sleep(Math.round(PERIOD * 1000L));
+                    // сессия пустая, если мы нGичего не смогли получить, тогда и ждать не надо, надо получать новую сессию
+                    if (loginSession.getSession() == null) {
+                        continue;
                     }
+                    TimeUnit.MILLISECONDS.sleep(Math.round(PERIOD * 1000L));
+                } else {
+                    TimeUnit.MILLISECONDS.sleep(1 * 1000L);
                 }
+            }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
