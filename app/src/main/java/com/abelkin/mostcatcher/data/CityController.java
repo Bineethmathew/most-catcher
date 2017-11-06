@@ -156,4 +156,10 @@ public class CityController extends DatabaseHandler {
         return result;
 
     }
+
+    public void deleteUnused() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("cities", "from_checked = 0 and to_checked = 0", null);
+        db.close();
+    }
 }

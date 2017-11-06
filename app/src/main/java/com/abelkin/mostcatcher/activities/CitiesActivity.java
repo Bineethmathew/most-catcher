@@ -1,7 +1,10 @@
 package com.abelkin.mostcatcher.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.abelkin.mostcatcher.R;
@@ -50,6 +53,30 @@ public class CitiesActivity extends AppCompatActivity {
 
             linearLayoutRecords.addView(locationItem);
         }
+
+    }
+
+    public void deleteUnused(View view) {
+        final CitiesActivity this$ = this;
+
+        new AlertDialog.Builder(view.getContext())
+                .setTitle("Удалить неиспользуемые")
+                .setMessage("Вы уверены, что хотите удалить неиспользуемые города из списка?")
+                .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        (new CityController(this$)).deleteUnused();
+                        readRecords();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
 
     }
 }

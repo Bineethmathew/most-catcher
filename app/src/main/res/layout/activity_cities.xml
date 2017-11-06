@@ -11,16 +11,31 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.abelkin.mostcatcher.activities.CitiesActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/activity_cities_scroll_view">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+    <LinearLayout
             android:orientation="vertical"
-            android:id="@+id/activity_cities_linear_layout"/>
-    </ScrollView>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+        <Button
+                android:text="@string/delete_unused"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/button"
+                android:onClick="deleteUnused"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/activity_cities_scroll_view">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/activity_cities_linear_layout"/>
+        </ScrollView>
+    </LinearLayout>
 
 </RelativeLayout>

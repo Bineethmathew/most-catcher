@@ -18,5 +18,6 @@
     <string name="end_interval">Конец интервала (ч)</string>
     <string name="begin_interval">Начало интервала (ч)</string>
     <string name="save">Сохранить</string>
+    <string name="delete_unused">Удалить неиспользуемые</string>
 
 </resources>
