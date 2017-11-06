@@ -32,7 +32,7 @@ public class MainTask extends AsyncTask<Void, String, Void> {
     public static Long UPPER_BOUND;
     public static Float PERIOD;
 
-    private boolean error_shown = false;
+    private static boolean error_shown = false;
 
     private Random random = new Random();
     private RestController restController;
@@ -52,7 +52,7 @@ public class MainTask extends AsyncTask<Void, String, Void> {
 
         //let's get the logins
         LoginController loginController = new LoginController(context);
-        List<Login> logins = loginController.read();
+        List<Login> logins = loginController.readChecked();
 
         loginSessionHashMap = new HashMap<>();
         for (Login login : logins) {
@@ -83,11 +83,18 @@ public class MainTask extends AsyncTask<Void, String, Void> {
         cityHashMap.put(city.getName(), city);
     }
 
-    public static void updateLoginHashMap(Login login) {
+    public static void putLoginToHashMap(Login login) {
         if (loginSessionHashMap == null) {
             loginSessionHashMap = new HashMap<>();
         }
         loginSessionHashMap.put(login.getLogin(), new LoginSession(login, null));
+    }
+
+    public static void removeLoginFromHashMap(Login login) {
+        if (loginSessionHashMap != null) {
+            loginSessionHashMap.remove(login.getLogin());
+        }
+        error_shown = false;
     }
 
     public static boolean getFromChecked(String cityName) {

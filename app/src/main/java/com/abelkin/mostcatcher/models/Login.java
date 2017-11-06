@@ -10,6 +10,7 @@ public class Login {
     String password;
     String phone;
     int badTries;
+    boolean checked;
 
     public Login() {
     }
@@ -52,6 +53,14 @@ public class Login {
 
     public void setBadTries(int badTries) {
         this.badTries = badTries;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public String toString() {

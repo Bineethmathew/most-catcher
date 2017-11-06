@@ -1,13 +1,9 @@
 package com.abelkin.mostcatcher.controllers;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import com.abelkin.mostcatcher.MainActivity;
-import com.abelkin.mostcatcher.R;
 import com.abelkin.mostcatcher.data.CityController;
 import com.abelkin.mostcatcher.data.LoginController;
-import com.abelkin.mostcatcher.helpers.Md5;
-import com.abelkin.mostcatcher.models.City;
+import com.abelkin.mostcatcher.util.Md5;
 import com.abelkin.mostcatcher.models.Login;
 import com.abelkin.mostcatcher.models.LoginSession;
 import com.abelkin.mostcatcher.tasks.MainTask;

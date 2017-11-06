@@ -1,4 +1,4 @@
-package com.abelkin.mostcatcher.helpers;
+package com.abelkin.mostcatcher.util;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;

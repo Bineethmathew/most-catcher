@@ -86,7 +86,7 @@ public class OnLongClickListenerLogin implements View.OnLongClickListener {
 
                                 boolean updateSuccessful = loginController.update(loginObj);
 
-                                MainTask.updateLoginHashMap(loginObj);
+                                MainTask.putLoginToHashMap(loginObj);
 
                                 if(updateSuccessful){
                                     Toast.makeText(context, "Успешно обновлено.", Toast.LENGTH_SHORT).show();

@@ -30,13 +30,14 @@ public class LoginController extends DatabaseHandler {
         values.put("password", login.getPassword());
         values.put("phone", login.getPhone());
         values.put("bad_tries", 0);
+        values.put("checked", 1);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         boolean createSuccessful = db.insert("logins", null, values) > 0;
         db.close();
 
-        MainTask.updateLoginHashMap(login);
+        MainTask.putLoginToHashMap(login);
 
         return createSuccessful;
     }
@@ -46,6 +47,28 @@ public class LoginController extends DatabaseHandler {
         List<Login> recordsList = new ArrayList<>();
 
         String sql = "SELECT * FROM logins ORDER BY login";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Login login = readRecord(cursor);
+                recordsList.add(login);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return recordsList;
+    }
+
+    public List<Login> readChecked() {
+
+        List<Login> recordsList = new ArrayList<>();
+
+        String sql = "SELECT * FROM logins WHERE checked = 1 ORDER BY login";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
@@ -94,6 +117,7 @@ public class LoginController extends DatabaseHandler {
         values.put("password", login.getPassword());
         values.put("phone", login.getPhone());
         values.put("bad_tries", login.getBadTries());
+        values.put("checked", login.isChecked() ? 1 : 0);
 
         String where = "id = ?";
 
@@ -137,6 +161,7 @@ public class LoginController extends DatabaseHandler {
         login.setPassword(cursor.getString(cursor.getColumnIndex("password")));
         login.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
         login.setBadTries(cursor.getInt(cursor.getColumnIndex("bad_tries")));
+        login.setChecked(cursor.getInt(cursor.getColumnIndex("checked")) == 1);
 
         return login;
     }
