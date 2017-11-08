@@ -1,6 +1,7 @@
 package com.abelkin.mostcatcher.controllers;
 
 import android.content.Context;
+import android.util.Log;
 import com.abelkin.mostcatcher.data.CityController;
 import com.abelkin.mostcatcher.data.LoginController;
 import com.abelkin.mostcatcher.util.Md5;
@@ -150,6 +151,8 @@ public class RestController {
                 .post(body)
                 .build();
 
+        Log.i("com.abelkin.Request", request.toString());
+
         Response response = null;
 
         try {
@@ -162,6 +165,7 @@ public class RestController {
         if (response != null && response.code() == 200) {
             try {
                 String jsonData = response.body().string();
+                Log.i("com.abelkin.Response", jsonData);
                 JSONObject jsonObject = new JSONObject(jsonData);
 
                 JSONArray orders = jsonObject.getJSONArray("reservationOrders");
