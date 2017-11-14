@@ -55,6 +55,8 @@ public class LoginsActivity extends AppCompatActivity {
                 }
             });
 
+            listView.setOnItemLongClickListener(new OnLongClickListenerLogin(logins));
+
             /*for (Login login : logins) {
 
                 TextView textViewStudentItem= new TextView(this);

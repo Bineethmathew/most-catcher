@@ -86,7 +86,7 @@ public class LoginController extends DatabaseHandler {
         return recordsList;
     }
 
-    public Login readSingleRecord(int loginId) {
+    public Login readSingleRecord(long loginId) {
 
         Login login = null;
 
