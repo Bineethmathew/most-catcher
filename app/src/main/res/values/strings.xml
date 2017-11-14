@@ -3,7 +3,7 @@
     <string name="app_name">Калькулятор</string>
     <string name="logins">Логины</string>
     <string name="cities">Города</string>
-    <string name="time">Время</string>
+    <string name="options">Настройки</string>
     <string name="create_login">Добавить логин</string>
     <string name="login">Логин</string>
     <string name="password">Пароль</string>
@@ -15,10 +15,17 @@
     <string name="lower_bound">com.abelkin.LOWER_BOUND</string>
     <string name="upper_bound">com.abelkin.UPPER_BOUND</string>
     <string name="period">com.abelkin.PERIOD</string>
+    <string name="usual_orders">com.abelkin.GET_USUAL_ORDERS</string>
+    <string name="lat_pref">com.abelkin.LAT_PREF</string>
+    <string name="long_pref">com.abelkin.LONG_PREF</string>
     <string name="period_s">Периодичность (с)</string>
     <string name="end_interval">Конец интервала (ч)</string>
     <string name="begin_interval">Начало интервала (ч)</string>
     <string name="save">Сохранить</string>
     <string name="delete_unused">Удалить неиспользуемые</string>
+    <string name="get_usual_orders">Ловить обычные заказы</string>
+    <string name="get_gps">Получить GPS</string>
+    <string name="latitude">Широта</string>
+    <string name="longitude">Долгота</string>
 
 </resources>

@@ -31,6 +31,9 @@ public class MainTask extends AsyncTask<Void, String, Void> {
     public static Long LOWER_BOUND;
     public static Long UPPER_BOUND;
     public static Float PERIOD;
+    public static Boolean GET_USUAL_ORDERS;
+    public static Float LATITUDE;
+    public static Float LONGITUDE;
 
     private static boolean error_shown = false;
 
@@ -70,6 +73,9 @@ public class MainTask extends AsyncTask<Void, String, Void> {
                 0L);
         PERIOD = sharedPref.getFloat(mContext.getString(R.string.period),
                 1.0f);
+        GET_USUAL_ORDERS = sharedPref.getBoolean(mContext.getString(R.string.usual_orders), false);
+        LATITUDE = sharedPref.getFloat(mContext.getString(R.string.lat_pref), 58.00454500000001f);
+        LONGITUDE = sharedPref.getFloat(mContext.getString(R.string.long_pref), 56.215320000000006f);
     }
 
     public static HashMap<String, City> getCityHashMap() {
@@ -154,10 +160,10 @@ public class MainTask extends AsyncTask<Void, String, Void> {
                 if (loginSession != null && loginSession.getSession() != null) {
                     publishProgress("Интервал (мс): " + (new Date().getTime() - checkPoint.getTime()));
                     checkPoint = new Date();
-                    String result = restController.processData(loginSession);
+                    String result = restController.processData(loginSession, GET_USUAL_ORDERS);
                     if (result != null && !result.isEmpty())
                     publishProgress(result);
-                    // сессия пустая, если мы нGичего не смогли получить, тогда и ждать не надо, надо получать новую сессию
+                    // сессия пустая, если мы ничего не смогли получить, тогда и ждать не надо, надо получать новую сессию
                     if (loginSession.getSession() == null) {
                         continue;
                     }

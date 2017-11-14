@@ -27,7 +27,7 @@
             android:layout_height="wrap_content" android:id="@+id/activity_main_btn_cities"
             android:onClick="openCities"/>
         <Button
-            android:text="@string/time"
+            android:text="@string/options"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/activity_main_btn_time"
             android:onClick="openTime"/>

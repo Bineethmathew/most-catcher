@@ -116,7 +116,56 @@ public class RestController {
 
     }
 
-    public synchronized String processData(LoginSession loginSession) {
+    private String getOrders(LoginSession loginSession, JSONArray orders) throws Exception {
+
+        String result = "";
+
+        final List<String> cityNames = new ArrayList<>();
+
+        final CityController cityController = new CityController(mContext);
+
+        for (int i = 0; i < orders.length(); i++) {
+
+            JSONObject order = orders.getJSONObject(i);
+
+            JSONObject addressFrom = order.getJSONObject("addressFrom");
+            String cityFrom = getCity(addressFrom);
+            cityNames.add(cityFrom);
+
+            JSONObject addressTo = order.getJSONObject("addressTo");
+            String cityTo = getCity(addressTo);
+            cityNames.add(cityTo);
+
+
+            if (MainTask.getFromChecked(cityFrom) && MainTask.getToChecked(cityTo)) {
+                Long time = order.getLong("desiredTime");
+                Date date = new Date();
+                date.setTime(time);
+
+                Date currentDate = new Date();
+
+                if (date.getTime() - currentDate.getTime() > MainTask.LOWER_BOUND &&
+                        date.getTime() - currentDate.getTime() < MainTask.UPPER_BOUND) {
+                    Long orderId = order.getLong("orderId");
+                    if (takeOrder(loginSession, orderId)) {
+                        result += " Взяли заказ: " + cityFrom + "-" + cityTo;
+                    }
+                }
+            }
+
+        }
+
+        new Thread(new Runnable(){
+            public void run(){
+                cityController.mergeCities(cityNames);
+            }
+        }).start();
+
+        return result;
+    }
+
+    public synchronized String processData(LoginSession loginSession,
+                                           Boolean getUsualOrders) {
 
         String result = "";
 
@@ -138,8 +187,8 @@ public class RestController {
         String url = urlBuilder.build().toString();
 
         RequestBody body = RequestBody.create(JSON, "{\"datetime\":" +
-                new Date().getTime() + ",\"isTaximeterOn\":false,\"latitude\":58.00454500000001,\"longitude\"" +
-                ":56.215320000000006,\"speed\":21.32988224029541,\"course\":65}");
+                new Date().getTime() + ",\"isTaximeterOn\":false,\"latitude\":" + MainTask.LATITUDE + ",\"longitude\":" +
+                MainTask.LONGITUDE + ",\"speed\":21.32988224029541,\"course\":65}");
 
         Request request = new Request.Builder()
                 .header("Accept", "application/json, text/javascript; q=0.9")
@@ -170,47 +219,14 @@ public class RestController {
 
                 JSONArray orders = jsonObject.getJSONArray("reservationOrders");
 
-                final List<String> cityNames = new ArrayList<String>();
+                result += getOrders(loginSession, orders);
 
-                final CityController cityController = new CityController(mContext);
-
-                for (int i = 0; i < orders.length(); i++) {
-
-                    JSONObject order = orders.getJSONObject(i);
-
-                    JSONObject addressFrom = order.getJSONObject("addressFrom");
-                    String cityFrom = getCity(addressFrom);
-                    cityNames.add(cityFrom);
-
-                    JSONObject addressTo = order.getJSONObject("addressTo");
-                    String cityTo = getCity(addressTo);
-                    cityNames.add(cityTo);
-
-
-                    if (MainTask.getFromChecked(cityFrom) && MainTask.getToChecked(cityTo)) {
-                        Long time = order.getLong("desiredTime");
-                        Date date = new Date();
-                        date.setTime(time);
-
-                        Date currentDate = new Date();
-
-                        if (date.getTime() - currentDate.getTime() > MainTask.LOWER_BOUND &&
-                                date.getTime() - currentDate.getTime() < MainTask.UPPER_BOUND) {
-                            Long orderId = order.getLong("orderId");
-                            if (takeOrder(loginSession, orderId)) {
-                                result += " Взяли заказ: " + cityFrom + "-" + cityTo;
-                            }
-                        }
+                if (getUsualOrders) {
+                    orders = jsonObject.getJSONArray("freeOrders");
+                    if (orders.length() > 0) {
+                        result += getOrders(loginSession, orders);
                     }
-
                 }
-
-                new Thread(new Runnable(){
-                    public void run(){
-                        cityController.mergeCities(cityNames);
-                    }
-                }).start();
-
 
             } catch (Exception e) {
                 return "Ошибка при получении заказов";

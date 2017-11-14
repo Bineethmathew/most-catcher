@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openTime(View view) {
-        Intent intent = new Intent(this, TimeActivity.class);
+        Intent intent = new Intent(this, OptionsActivity.class);
         startActivity(intent);
     }
 }
