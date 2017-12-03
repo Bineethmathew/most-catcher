@@ -2,6 +2,7 @@ package com.abelkin.mostcatcher.controllers;
 
 import android.content.Context;
 import android.util.Log;
+import com.abelkin.mostcatcher.activities.CitiesActivity;
 import com.abelkin.mostcatcher.data.CityController;
 import com.abelkin.mostcatcher.data.LoginController;
 import com.abelkin.mostcatcher.util.Md5;
@@ -165,7 +166,8 @@ public class RestController {
     }
 
     public synchronized String processData(LoginSession loginSession,
-                                           Boolean getUsualOrders) {
+                                           Boolean getNewOrders,
+                                           Boolean getFreeOrders) {
 
         String result = "";
 
@@ -211,7 +213,7 @@ public class RestController {
             return "Ошибка при получении заказов";
         }
 
-        if (response != null && response.code() == 200) {
+        if (response != null && response.code() == 200 && response.body() != null) {
             try {
                 String jsonData = response.body().string();
                 Log.i("com.abelkin.Response", jsonData);
@@ -221,7 +223,14 @@ public class RestController {
 
                 result += getOrders(loginSession, orders);
 
-                if (getUsualOrders) {
+                if (getNewOrders) {
+                    orders = jsonObject.getJSONArray("newOrders");
+                    if (orders.length() > 0) {
+                        result += getOrders(loginSession, orders);
+                    }
+                }
+
+                if (getFreeOrders) {
                     orders = jsonObject.getJSONArray("freeOrders");
                     if (orders.length() > 0) {
                         result += getOrders(loginSession, orders);

@@ -15,7 +15,8 @@
     <string name="lower_bound">com.abelkin.LOWER_BOUND</string>
     <string name="upper_bound">com.abelkin.UPPER_BOUND</string>
     <string name="period">com.abelkin.PERIOD</string>
-    <string name="usual_orders">com.abelkin.GET_USUAL_ORDERS</string>
+    <string name="new_orders">com.abelkin.GET_NEW_ORDERS</string>
+    <string name="free_orders">com.abelkin.GET_FREE_ORDERS</string>
     <string name="lat_pref">com.abelkin.LAT_PREF</string>
     <string name="long_pref">com.abelkin.LONG_PREF</string>
     <string name="period_s">Периодичность (с)</string>
@@ -23,7 +24,8 @@
     <string name="begin_interval">Начало интервала (ч)</string>
     <string name="save">Сохранить</string>
     <string name="delete_unused">Удалить неиспользуемые</string>
-    <string name="get_usual_orders">Ловить обычные заказы</string>
+    <string name="get_new_orders">Текущие заказы</string>
+    <string name="get_free_orders">Свободные заказы</string>
     <string name="get_gps">Получить GPS</string>
     <string name="latitude">Широта</string>
     <string name="longitude">Долгота</string>

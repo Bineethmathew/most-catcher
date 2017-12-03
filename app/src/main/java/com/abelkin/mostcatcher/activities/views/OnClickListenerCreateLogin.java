@@ -16,6 +16,13 @@ import com.abelkin.mostcatcher.models.Login;
  * Created by abelkin on 27.06.2017.
  */
 public class OnClickListenerCreateLogin implements View.OnClickListener {
+
+    private LoginsActivity loginsActivity;
+
+    public OnClickListenerCreateLogin(LoginsActivity loginsActivity) {
+        this.loginsActivity = loginsActivity;
+    }
+
     @Override
     public void onClick(View view) {
         final Context context = view.getRootView().getContext();
@@ -51,7 +58,7 @@ public class OnClickListenerCreateLogin implements View.OnClickListener {
                                     Toast.makeText(context, "Информация о логине не добавлена.", Toast.LENGTH_SHORT).show();
                                 }
 
-                                ((LoginsActivity) context).readRecords();
+                                loginsActivity.readRecords();
 
                                 dialog.cancel();
                             }

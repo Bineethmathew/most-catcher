@@ -3,6 +3,7 @@ package com.abelkin.mostcatcher.tasks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 import com.abelkin.mostcatcher.R;
 import com.abelkin.mostcatcher.controllers.RestController;
@@ -31,7 +32,8 @@ public class MainTask extends AsyncTask<Void, String, Void> {
     public static Long LOWER_BOUND;
     public static Long UPPER_BOUND;
     public static Float PERIOD;
-    public static Boolean GET_USUAL_ORDERS;
+    public static Boolean GET_NEW_ORDERS;
+    public static Boolean GET_FREE_ORDERS;
     public static Float LATITUDE;
     public static Float LONGITUDE;
 
@@ -73,7 +75,8 @@ public class MainTask extends AsyncTask<Void, String, Void> {
                 0L);
         PERIOD = sharedPref.getFloat(mContext.getString(R.string.period),
                 1.0f);
-        GET_USUAL_ORDERS = sharedPref.getBoolean(mContext.getString(R.string.usual_orders), false);
+        GET_NEW_ORDERS = sharedPref.getBoolean(mContext.getString(R.string.new_orders), false);
+        GET_FREE_ORDERS = sharedPref.getBoolean(mContext.getString(R.string.free_orders), false);
         LATITUDE = sharedPref.getFloat(mContext.getString(R.string.lat_pref), 58.00454500000001f);
         LONGITUDE = sharedPref.getFloat(mContext.getString(R.string.long_pref), 56.215320000000006f);
     }
@@ -153,14 +156,16 @@ public class MainTask extends AsyncTask<Void, String, Void> {
     protected Void doInBackground(Void... params) {
         try {
             Date checkPoint = new Date();
+            int i = 0;
             while (true) {
 
                 LoginSession loginSession = getRandomSession();
 
                 if (loginSession != null && loginSession.getSession() != null) {
-                    publishProgress("Интервал (мс): " + (new Date().getTime() - checkPoint.getTime()));
+                    //publishProgress("Интервал (мс): " + (new Date().getTime() - checkPoint.getTime()));
+                    Log.i("com.abelkin.Response", "Интервал (мс): " + (new Date().getTime() - checkPoint.getTime()));
                     checkPoint = new Date();
-                    String result = restController.processData(loginSession, GET_USUAL_ORDERS);
+                    String result = restController.processData(loginSession, GET_NEW_ORDERS, GET_FREE_ORDERS);
                     if (result != null && !result.isEmpty())
                     publishProgress(result);
                     // сессия пустая, если мы ничего не смогли получить, тогда и ждать не надо, надо получать новую сессию
@@ -170,6 +175,11 @@ public class MainTask extends AsyncTask<Void, String, Void> {
                     TimeUnit.MILLISECONDS.sleep(Math.round(PERIOD * 1000L));
                 } else {
                     TimeUnit.MILLISECONDS.sleep(1 * 1000L);
+                }
+                i++;
+                if (i == 20) {
+                    i = 0;
+                    publishProgress("Сделано 20 запросов");
                 }
             }
 

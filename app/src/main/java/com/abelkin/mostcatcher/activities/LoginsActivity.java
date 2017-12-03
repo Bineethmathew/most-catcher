@@ -22,7 +22,7 @@ public class LoginsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_logins);
 
         Button buttonCreateLogin = (Button)findViewById(R.id.activity_logins_create);
-        buttonCreateLogin.setOnClickListener(new OnClickListenerCreateLogin());
+        buttonCreateLogin.setOnClickListener(new OnClickListenerCreateLogin(this));
 
         readRecords();
     }

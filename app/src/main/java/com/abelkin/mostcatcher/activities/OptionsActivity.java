@@ -39,21 +39,24 @@ public class OptionsActivity extends AppCompatActivity {
         Long upperBound = sharedPref.getLong(getString(R.string.upper_bound),
                 0L);
         Float period = sharedPref.getFloat(getString(R.string.period), 10.0f);
-        Boolean getUsualOrders = sharedPref.getBoolean(getString(R.string.usual_orders), false);
+        Boolean getNewOrders = sharedPref.getBoolean(getString(R.string.new_orders), false);
+        Boolean getFreeOrders = sharedPref.getBoolean(getString(R.string.free_orders), false);
         Double lat = (double)sharedPref.getFloat(getString(R.string.lat_pref), 58.00454500000001f);
         Double longi = (double)sharedPref.getFloat(getString(R.string.long_pref), 56.215320000000006f);
 
         EditText editTextFrom = (EditText)findViewById(R.id.activity_time_from);
         EditText editTextTo = (EditText)findViewById(R.id.activity_time_to);
         EditText editTextPeriod = (EditText)findViewById(R.id.activity_time_period);
-        CheckBox checkBoxUsual = (CheckBox)findViewById(R.id.activity_time_usual);
+        CheckBox checkBoxNew = (CheckBox)findViewById(R.id.activity_time_new);
+        CheckBox checkBoxFree = (CheckBox)findViewById(R.id.activity_time_free);
         EditText editTextLat = (EditText)findViewById(R.id.activity_time_lat);
         EditText editTextLong = (EditText)findViewById(R.id.activity_time_long);
 
         editTextFrom.setText(String.valueOf(new Double(lowerBound) / 1000 / 60 / 60));
         editTextTo.setText(String.valueOf(new Double(upperBound) / 1000L / 60L / 60L));
         editTextPeriod.setText(String.valueOf(period));
-        checkBoxUsual.setChecked(getUsualOrders);
+        checkBoxNew.setChecked(getNewOrders);
+        checkBoxFree.setChecked(getFreeOrders);
         editTextLat.setText(String.valueOf(lat));
         editTextLong.setText(String.valueOf(longi));
 
@@ -113,7 +116,8 @@ public class OptionsActivity extends AppCompatActivity {
         EditText editTextFrom = (EditText)findViewById(R.id.activity_time_from);
         EditText editTextTo = (EditText)findViewById(R.id.activity_time_to);
         EditText editTextPeriod = (EditText)findViewById(R.id.activity_time_period);
-        CheckBox checkBoxUsual = (CheckBox)findViewById(R.id.activity_time_usual);
+        CheckBox checkBoxNew = (CheckBox)findViewById(R.id.activity_time_new);
+        CheckBox checkBoxFree = (CheckBox)findViewById(R.id.activity_time_free);
         EditText editTextLat = (EditText)findViewById(R.id.activity_time_lat);
         EditText editTextLong = (EditText)findViewById(R.id.activity_time_long);
 
@@ -122,14 +126,16 @@ public class OptionsActivity extends AppCompatActivity {
         MainTask.UPPER_BOUND = Math.round(Double.parseDouble(editTextTo.getText().toString())) *
                 1000L * 60L * 60L;
         MainTask.PERIOD = Float.parseFloat(editTextPeriod.getText().toString());
-        MainTask.GET_USUAL_ORDERS = checkBoxUsual.isChecked();
+        MainTask.GET_NEW_ORDERS = checkBoxNew.isChecked();
+        MainTask.GET_FREE_ORDERS = checkBoxFree.isChecked();
         MainTask.LATITUDE = Float.parseFloat(editTextLat.getText().toString());
         MainTask.LONGITUDE = Float.parseFloat(editTextLong.getText().toString());
 
         editor.putLong(getString(R.string.lower_bound), MainTask.LOWER_BOUND);
         editor.putLong(getString(R.string.upper_bound), MainTask.UPPER_BOUND);
         editor.putFloat(getString(R.string.period), MainTask.PERIOD);
-        editor.putBoolean(getString(R.string.usual_orders), MainTask.GET_USUAL_ORDERS);
+        editor.putBoolean(getString(R.string.new_orders), MainTask.GET_NEW_ORDERS);
+        editor.putBoolean(getString(R.string.free_orders), MainTask.GET_FREE_ORDERS);
         editor.putFloat(getString(R.string.lat_pref), MainTask.LATITUDE);
         editor.putFloat(getString(R.string.long_pref), MainTask.LONGITUDE);
         editor.commit();
