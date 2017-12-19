@@ -156,14 +156,14 @@ public class MainTask extends AsyncTask<Void, String, Void> {
     protected Void doInBackground(Void... params) {
         try {
             Date checkPoint = new Date();
-            int i = 0;
+            //int i = 0;
             while (true) {
 
                 LoginSession loginSession = getRandomSession();
 
                 if (loginSession != null && loginSession.getSession() != null) {
-                    //publishProgress("Интервал (мс): " + (new Date().getTime() - checkPoint.getTime()));
-                    Log.i("com.abelkin.Response", "Интервал (мс): " + (new Date().getTime() - checkPoint.getTime()));
+                    publishProgress("Интервал (мс): " + (new Date().getTime() - checkPoint.getTime()));
+                    //Log.i("com.abelkin.Response", "Интервал (мс): " + (new Date().getTime() - checkPoint.getTime()));
                     checkPoint = new Date();
                     String result = restController.processData(loginSession, GET_NEW_ORDERS, GET_FREE_ORDERS);
                     if (result != null && !result.isEmpty())
@@ -176,11 +176,11 @@ public class MainTask extends AsyncTask<Void, String, Void> {
                 } else {
                     TimeUnit.MILLISECONDS.sleep(1 * 1000L);
                 }
-                i++;
+                /*i++;
                 if (i == 20) {
                     i = 0;
                     publishProgress("Сделано 20 запросов");
-                }
+                }*/
             }
 
         } catch (InterruptedException e) {
